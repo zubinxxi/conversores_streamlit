@@ -8,7 +8,7 @@ st.set_page_config(
     page_icon="assets/favicon.ico",
 )
 
-st.title(":green[Calculos y Conversores]")
+st.title(":blue[Calculos y Conversores]")
 
 tab1, tab2, tab3 = st.tabs(
     [
