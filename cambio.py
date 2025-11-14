@@ -47,4 +47,4 @@ def cambio():
         tipo_cambio = data['quotes'][f'{codigo_origen}{codigo_destino}']
         res_moneda = moneda * tipo_cambio
 
-        st.subheader(f"{moneda} {moneda_origen} equivale a: :orange[{res_moneda:,.2f}] {moneda_destino}")
+        st.subheader(f"{moneda} {moneda_origen} equivale a: :red[{res_moneda:,.2f}] {moneda_destino}")
