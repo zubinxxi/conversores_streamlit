@@ -2,6 +2,7 @@ import os
 import streamlit as st 
 import requests as rq
 from dotenv import load_dotenv
+from streamlit_extras.no_default_selectbox import selectbox as no_df_selectbox
 
 # Cargar las variables de entorno desde el archivo .env
 load_dotenv()
@@ -28,23 +29,32 @@ def cambio():
     ]
 
     cc1, cc2, cc3 = st.columns(3)
-    moneda = cc1.number_input("moneda", step=1, value=1)
+    codigo_origen=""
+    codigo_destino=""
+    with cc1:
+        moneda = cc1.number_input("moneda", step=1, value=1)
     with cc2:
-        moneda_origen = st.selectbox("Moneda origen", options=[item[1] for item in currencies])
-        codigo_origen = next(item[0] for item in currencies if item[1] == moneda_origen)
-        #st.write(f"({codigo_origen})")
+        moneda_origen = no_df_selectbox("Moneda origen", options=[item[1] for item in currencies], no_selection_label="Seleccionar")
+        if moneda_origen:
+            codigo_origen = next(item[0] for item in currencies if item[1] == moneda_origen)
+            #st.write(f"({codigo_origen})")
 
     with cc3:
-        moneda_destino = st.selectbox("Moneda destino", options=sorted([item[1] for item in currencies]))
-        codigo_destino = next(item[0] for item in currencies if item[1] == moneda_destino)
-        #st.write(f"({codigo_destino})")
+        moneda_destino = no_df_selectbox("Moneda destino", options=([item[1] for item in currencies]), no_selection_label="Seleccionar")
+        if moneda_destino:
+            codigo_destino = next(item[0] for item in currencies if item[1] == moneda_destino)
+            #st.write(f"({codigo_destino})")
 
     url = f"https://apilayer.net/api/live?access_key={api_key}&currencies={codigo_destino}&source={codigo_origen}&format=1"
     
     if st.button("Convertir", type="primary", key="btn_cambio"):
-        response = rq.get(url)
-        data = response.json()
-        tipo_cambio = data['quotes'][f'{codigo_origen}{codigo_destino}']
-        res_moneda = moneda * tipo_cambio
+        if moneda_origen and moneda_destino:
+            response = rq.get(url)
+            data = response.json()
+            tipo_cambio = data['quotes'][f'{codigo_origen}{codigo_destino}']
+            res_moneda = moneda * tipo_cambio
 
-        st.subheader(f"{moneda} {moneda_origen} equivale a: :red[{res_moneda:,.2f}] {moneda_destino}")
+            st.subheader(f"{moneda} {moneda_origen} equivale a: :red[{res_moneda:,.2f}] {moneda_destino}")
+        else:
+            st.error("Debe elegir moneda origen y destino.")
+    
