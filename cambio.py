@@ -28,22 +28,19 @@ def cambio():
         ('BRL', 'Real Brasileño'),
     ]
 
-    cc1, cc2, cc3 = st.columns(3)
-    codigo_origen=""
-    codigo_destino=""
-    with cc1:
-        moneda = cc1.number_input("moneda", step=1, value=1)
-    with cc2:
+    with st.container(horizontal=True):
+        codigo_origen=""
+        codigo_destino=""
+        
+        moneda = st.number_input("moneda", step=1, value=1)
+
         moneda_origen = no_df_selectbox("Moneda origen", options=[item[1] for item in currencies], no_selection_label="Seleccionar")
         if moneda_origen:
             codigo_origen = next(item[0] for item in currencies if item[1] == moneda_origen)
-            #st.write(f"({codigo_origen})")
 
-    with cc3:
         moneda_destino = no_df_selectbox("Moneda destino", options=([item[1] for item in currencies]), no_selection_label="Seleccionar")
         if moneda_destino:
             codigo_destino = next(item[0] for item in currencies if item[1] == moneda_destino)
-            #st.write(f"({codigo_destino})")
 
     url = f"https://apilayer.net/api/live?access_key={api_key}&currencies={codigo_destino}&source={codigo_origen}&format=1"
     

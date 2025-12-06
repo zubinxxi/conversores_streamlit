@@ -37,10 +37,9 @@ def imc():
         }
     )
 
-    c1, c2 = st.columns(2)
-
-    peso = c1.number_input("Peso", step=1)
-    altura = c2.number_input("Altura")
+    with st.container(horizontal=True):
+        peso = st.number_input("Peso", step=1)
+        altura = st.number_input("Altura")
 
     def imc_calc(peso, altura):
         if altura <= 0 or peso <= 0:
